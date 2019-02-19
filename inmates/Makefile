@@ -24,6 +24,13 @@ ifeq ($(subst arm64,arm,$(SRCARCH)),arm)
 INCLUDES += -I$(src)/../hypervisor/arch/arm-common/include
 endif
 
+#$(info previous CC-> $(CC))
+#
+#CC = /home/joao/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-elf/bin/aarch64-elf-gcc
+#LD = /home/joao/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-elf/bin/aarch64-elf-ld
+
+#$(info updated CC-> $(CC))
+
 LINUXINCLUDE  := $(INCLUDES)
 KBUILD_CFLAGS := -g -Os -Wall -Wstrict-prototypes -Wtype-limits \
 		 -Wmissing-declarations -Wmissing-prototypes \
@@ -38,6 +45,7 @@ endif
 OBJCOPYFLAGS := -O binary
 # prior to 4.19
 LDFLAGS += --gc-sections -T
+#LDFLAGS += -EL -maarch64elf --gc-sections -T
 # since 4.19
 KBUILD_LDFLAGS += --gc-sections -T
 
