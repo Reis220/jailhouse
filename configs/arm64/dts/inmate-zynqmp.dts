@@ -79,14 +79,23 @@
 		#clock-cells = <0>;
 		clock-frequency = <100000000>;
 	};
+	
+	uart0: serial@ff000000 {
+		compatible = "cdns,uart-r1p12", "xlnx,xuartps";
+		reg = <0x0 0xff000000 0x0 0x1000>;
+		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&uartclk>, <&uartclk>;
+		clock-names = "uart_clk", "pclk";
+	};
 
-	uart: serial@ff010000 {
+	uart1: serial@ff010000 {
 		compatible = "cdns,uart-r1p12", "xlnx,xuartps";
 		reg = <0x0 0xff010000 0x0 0x1000>;
 		interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&uartclk>, <&uartclk>;
 		clock-names = "uart_clk", "pclk";
 	};
+	
 
 	pci@fc000000 {
 		compatible = "pci-host-ecam-generic";

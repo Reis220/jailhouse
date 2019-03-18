@@ -38,12 +38,14 @@
 
 #include <inmate.h>
 
+#define PCI_CFG_DEVS_MAX        (1 << 8) 
+
 int pci_find_device(u16 vendor, u16 device, u16 start_bdf)
 {
 	unsigned int bdf;
 	u16 id;
 
-	for (bdf = start_bdf; bdf < 0x10000; bdf++) {
+	for (bdf = start_bdf; bdf < PCI_CFG_DEVS_MAX; bdf++) {
 		id = pci_read_config(bdf, PCI_CFG_VENDOR_ID, 2);
 		if (id == PCI_ID_ANY || (vendor != PCI_ID_ANY && vendor != id))
 			continue;

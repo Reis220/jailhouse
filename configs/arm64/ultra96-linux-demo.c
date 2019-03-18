@@ -28,8 +28,9 @@ struct {
 	.cell = {
 		.signature = JAILHOUSE_CELL_DESC_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
-		.name = "Ultra96-linux-demo",
-		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG,
+		.name = "non-root-ultra96",
+		.flags = JAILHOUSE_CELL_PASSIVE_COMMREG |
+		JAILHOUSE_CELL_VIRTUAL_CONSOLE_ACTIVE,
 
 		.cpu_set_size = sizeof(config.cpus),
 		.num_memory_regions = ARRAY_SIZE(config.mem_regions),
@@ -39,7 +40,8 @@ struct {
 		.vpci_irq_base = 140-32,
 
 		.console = {
-			.address = 0xff010000,
+			//.address = 0xff010000, /*UART1*/
+			.address = 0xff000000, /*UART0*/
 			.type= JAILHOUSE_CON_TYPE_XUARTPS,
 			.flags = JAILHOUSE_CON_ACCESS_MMIO |
 				 JAILHOUSE_CON_REGDIST_4,
@@ -47,13 +49,15 @@ struct {
 	},
 
 	.cpus = {
-		0xc,
+		0x8, //1000 - fica com cpu3
 	},
 
 	.mem_regions = {
 		/* UART */ {
 			.phys_start = 0xff010000,
 			.virt_start = 0xff010000,
+			/*.phys_start = 0xff000000,
+			.virt_start = 0xff000000,*/
 			.size = 0x1000,
 			.flags = JAILHOUSE_MEM_READ | JAILHOUSE_MEM_WRITE |
 				JAILHOUSE_MEM_IO | JAILHOUSE_MEM_ROOTSHARED,
@@ -90,13 +94,15 @@ struct {
 
 	.irqchips = {
 		/* GIC */ {
-			.address = 0xf9010000,
-			.pin_base = 32,
+			.address = 0xf9010000, /* GICD base address - Display controller */
+			.pin_base = 32, /* The first irqchip starts at .pin_base=32 as the first 32 interrupts are 
+reserved for SGIs and PPIs. */
 			.pin_bitmap = {
-				1 << (54 - 32),
+				//1 << (54 - 32),
+				1 << (53 - 32), // cat /proc/interrupts interrupt da UART0 AQUI ESTA A DIFERENÇA
 				0,
 				0,
-				(1 << (140 - 128)) | (1 << (142 - 128))
+				(1 << (140 - 128)) | (1 << (142 - 128)) //PL to PS interrupt signals 8 to 15.
 			},
 		},
 	},
@@ -104,13 +110,15 @@ struct {
 	.pci_devices = {
 		/* 00:00.0 */ {
 			.type = JAILHOUSE_PCI_TYPE_IVSHMEM,
-			.bdf = 0 << 3,
+			.bdf = 0 << 3, // 00:00.0
 			.bar_mask = {
 				0xffffff00, 0xffffffff, 0x00000000,
 				0x00000000, 0x00000000, 0x00000000,
 			},
 			.shmem_region = 3,
-			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
+			//.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
+			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_CUSTOM,
+			//.num_msix_vectors = 1,
 		},
 	},
 };

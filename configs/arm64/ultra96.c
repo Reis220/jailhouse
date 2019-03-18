@@ -53,7 +53,7 @@ struct {
 			},
 		},
 		.root_cell = {
-			.name = "Ultra96",
+			.name = "root-ultra96",
 
 			.cpu_set_size = sizeof(config.cpus),
 			.num_memory_regions = ARRAY_SIZE(config.mem_regions),
@@ -104,6 +104,7 @@ struct {
 	.pci_devices = {
 		/* 0001:00:00.0 */ {
 			.type = JAILHOUSE_PCI_TYPE_IVSHMEM,
+			.iommu = 1,//
 			.domain = 1,
 			.bdf = 0 << 3,
 			.bar_mask = {
@@ -111,7 +112,9 @@ struct {
 				0x00000000, 0x00000000, 0x00000000,
 			},
 			.shmem_region = 2,
-			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
+			//.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
+			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_CUSTOM,
+			.num_msix_vectors = 1,//
 		},
 	},
 };
