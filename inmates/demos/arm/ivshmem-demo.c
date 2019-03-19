@@ -19,12 +19,12 @@
 
 #define JAILHOUSE_SHMEM_PROTO_UNDEFINED	0x0000
 
-#define IRQ_VECTOR	32
+#define IVSHMEM_IRQ	155
 
 #define MAX_NDEV	4
 
 static char str[32] = "Hello From IVSHMEM  ";
-static int ndevices;
+//static int ndevices;
 static int irq_counter;
 
 struct ivshmem_dev_data {
@@ -67,7 +67,7 @@ static u64 get_bar_sz(u16 bdf, u8 barn)
 	return barsz;
 }
 
-static void map_shmem_and_bars(struct ivshmem_dev_data *d)
+static int map_shmem_and_bars(struct ivshmem_dev_data *d)
 {
         d->shmemsz = pci_cfg_read64(d->bdf, IVSHMEM_CFG_SHMEM_SZ); 
         d->shmem = (void *)((u64)(0xffffffffffffffff & pci_cfg_read64(d->bdf, IVSHMEM_CFG_SHMEM_PTR))); 
@@ -81,9 +81,11 @@ static void map_shmem_and_bars(struct ivshmem_dev_data *d)
  
         pci_write_config(d->bdf, PCI_CFG_COMMAND, 
                          (PCI_CMD_MEM | PCI_CMD_MASTER), 2); 
+
+	return 0;
 }
 
-static int get_ivpos(struct ivshmem_dev_data *d)
+static u32 get_ivpos(struct ivshmem_dev_data *d)
 {
 	return mmio_read32(d->registers + 2);
 }
@@ -110,10 +112,10 @@ static void handle_irq(unsigned int irqn)
 void inmate_main(void) 
 { 
         unsigned int i = 0; 
-+        /* FIXME: Get the PCI configuration space base address from 
-+        // command line arguments 
-+        // (originally, get it from the root cell config 
-+        // file:config.header.platform_info.pci_mmconfig_base) */ 
+        /* FIXME: Get the PCI configuration space base address from 
+        // command line arguments 
+        // (originally, get it from the root cell config 
+        // file:config.header.platform_info.pci_mmconfig_base) */ 
         int bdf = 0; 
         unsigned int class_rev; 
         struct ivshmem_dev_data *d = NULL; 
@@ -144,7 +146,7 @@ void inmate_main(void)
                         return; 
                 } 
  
-                printk("IVSHMEM: mapped shmem and bars, got position %p\n", 
+                printk("IVSHMEM: mapped shmem and bars, got position %d\n", 
                        get_ivpos(d)); 
  
                 printk("IVSHMEM: %s\n", str); 

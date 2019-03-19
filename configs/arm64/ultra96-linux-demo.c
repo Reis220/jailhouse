@@ -40,8 +40,8 @@ struct {
 		.vpci_irq_base = 140-32,
 
 		.console = {
-			//.address = 0xff010000, /*UART1*/
-			.address = 0xff000000, /*UART0*/
+			.address = 0xff010000, /*UART1*/
+			//.address = 0xff000000, /*UART0*/
 			.type= JAILHOUSE_CON_TYPE_XUARTPS,
 			.flags = JAILHOUSE_CON_ACCESS_MMIO |
 				 JAILHOUSE_CON_REGDIST_4,
@@ -49,7 +49,8 @@ struct {
 	},
 
 	.cpus = {
-		0x8, //1000 - fica com cpu3
+		//0x8, //1000 - fica com cpu3
+		0xc, //1100
 	},
 
 	.mem_regions = {
@@ -117,7 +118,7 @@ reserved for SGIs and PPIs. */
 			},
 			.shmem_region = 3,
 			//.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
-			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_CUSTOM,
+			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_CUSTOM, //se n meter isto da unhandled trap! pq??
 			//.num_msix_vectors = 1,
 		},
 	},

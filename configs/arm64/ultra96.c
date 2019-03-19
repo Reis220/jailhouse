@@ -104,7 +104,7 @@ struct {
 	.pci_devices = {
 		/* 0001:00:00.0 */ {
 			.type = JAILHOUSE_PCI_TYPE_IVSHMEM,
-			.iommu = 1,//
+			//.iommu = 1,//
 			.domain = 1,
 			.bdf = 0 << 3,
 			.bar_mask = {
@@ -114,7 +114,7 @@ struct {
 			.shmem_region = 2,
 			//.shmem_protocol = JAILHOUSE_SHMEM_PROTO_VETH,
 			.shmem_protocol = JAILHOUSE_SHMEM_PROTO_CUSTOM,
-			.num_msix_vectors = 1,//
+			//.num_msix_vectors = 1,//
 		},
 	},
 };
