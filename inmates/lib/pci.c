@@ -44,9 +44,9 @@ int pci_find_device(u16 vendor, u16 device, u16 start_bdf)
 {
 	unsigned int bdf;
 	u16 id;
-
 	for (bdf = start_bdf; bdf < PCI_CFG_DEVS_MAX; bdf++) {
 		id = pci_read_config(bdf, PCI_CFG_VENDOR_ID, 2);
+		//printk("vendor id = %d, PCI_ID_ANY = %d, bdf =%d\n", id, PCI_ID_ANY, bdf);
 		if (id == PCI_ID_ANY || (vendor != PCI_ID_ANY && vendor != id))
 			continue;
 		if (device == PCI_ID_ANY ||

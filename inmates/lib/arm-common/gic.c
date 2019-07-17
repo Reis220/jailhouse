@@ -64,13 +64,14 @@ void vector_irq(void)
 
 void gic_setup(irq_handler_t handler)
 {
+	//printk("enter gic_setup().\n");
 	if (comm_region->gic_version == 3)
 		gic = &gic_v3;
-
+	//printk("before gic_init().\n");
 	gic->init();
-
+	//printk("after gic_init().\n");
 	irq_handler = handler;
-
+	//printk("before gic_setup_irq_stack().\n");
 	gic_setup_irq_stack();
 }
 

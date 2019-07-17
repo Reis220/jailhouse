@@ -5,6 +5,10 @@
 u32 pci_read_config(u16 bdf, unsigned int addr, unsigned int size)
 {	
 	u64 reg_addr = PCI_CFG_BASE | ((u32)bdf << 8) | (addr & 0xfc);
+	/*printk("PCI_CFG_BASE = %u\n", PCI_CFG_BASE);
+	printk("bdf = %d\n", bdf);
+	printk("addr = %u\n", addr);
+	printk("inside pci_read_config, reg_addr = %llu, size = %d\n", reg_addr, size);*/
 	switch (size) {
 	case 1:
 		return mmio_read8((u8 *)(reg_addr + (addr & 0x3)));
